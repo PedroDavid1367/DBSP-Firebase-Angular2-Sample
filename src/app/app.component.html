@@ -1,3 +1,31 @@
 <h1>
   {{title}}
 </h1>
+
+<br />
+<div> {{ (_af.auth | async)?.uid }} </div>
+<button (click)="login()">Log in</button>
+<button (click)="logout()">Log out</button>
+<br />
+
+<ul>
+  <li class="text" *ngFor="let movie of movies | async">
+    {{ movie.$value }}
+  </li>
+  <li class="text" *ngFor="let movie of movies | async">
+    {{ movie | json }}
+  </li>
+</ul>
+
+<h3>{{ (favMovie | async)?.name }}</h3>
+<h3 *ngIf="favouriteMovie">My favourite movie: {{ favouriteMovie }}</h3>
+
+<input type="button" value="Update Movies" (click)="updateMovies()" /><br />
+<input type="button" value="Filter by child si 1" (click)="filter(1)" /><br />
+<input type="button" value="Filter by child si 2" (click)="filter(2)" /><br />
+
+<ul>
+  <li class="text" *ngFor="let item of similarItems">
+    {{ item | json }}
+  </li>
+</ul>
