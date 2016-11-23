@@ -87,7 +87,18 @@ export class AppComponent {
   }
 
   public logout () {
-      this._af.auth.logout();
+    this._af.auth.logout();
+  }
+
+  public addUser () {
+    this._af.auth.createUser(
+      {
+        email: "pedro.571.david@gmail.com", 
+        password: "David571"
+      }
+    )
+    .then(auth => console.log(auth))
+    .catch(err => console.log(err));
   }
 
   public similarItems;
