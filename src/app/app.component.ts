@@ -91,14 +91,69 @@ export class AppComponent {
   }
 
   public addUser () {
+    // Lets say that the user has set up a username, password and email.
+    var username = "Pedro David";
+    var password = "David571";
+    var email = "p3@p3.com";  
     this._af.auth.createUser(
       {
-        email: "pedro.571.david@gmail.com", 
-        password: "David571"
+        email: email, 
+        password: password
       }
     )
-    .then(auth => console.log(auth))
+    .then(auth => {
+      console.log(auth);
+      this._af.auth.login({
+        email: auth.auth.email,
+        password: password,
+      },
+      {
+        provider: AuthProviders.Password,
+        method: AuthMethods.Password,
+      })
+      .then(auth => {
+        this._af.database.object(`/users/${auth.uid}`)
+          .set({
+            username: username,
+            password: password,
+            email: email 
+          });
+      })
+      .catch(err => console.log(err));  
+    })
     .catch(err => console.log(err));
+  }
+
+  public changeUsername () {
+    // this._af.auth.subscribe(auth => {
+    //   auth.auth.displayName = "Pedro David Fuentes Antezana";
+    // });
+    this._af.auth.subscribe(auth => {
+      this._af.database.object(`/users/${auth.uid}`)
+        .update({
+          username: "Pedro David Fuentes Antezana"
+        });
+    });
+  }
+
+  public getUsername () {
+    // this._af.auth.subscribe(auth => {
+    //   console.log(auth.auth.displayName);
+    // });
+    this._af.auth.subscribe(auth => {
+      this._af.database.object(`/users/${auth.uid}`)
+        .subscribe(obj => {
+          console.log(obj.username);
+        });
+    });
+  }
+
+  public addNewMovie () {
+    // this._af.database.object("/movies")
+    //   .update({name: "eg!"})
+    //   .catch(err => console.log("Error on method addNewMovie() " + err));
+    console.log("The auth object:");
+    console.log(this._af.auth.subscribe(userAuth => console.log(userAuth)));
   }
 
   public similarItems;
